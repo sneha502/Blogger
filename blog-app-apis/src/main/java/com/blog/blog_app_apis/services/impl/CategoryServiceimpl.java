@@ -1,9 +1,12 @@
 package com.blog.blog_app_apis.services.impl;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.blog.blog_app_apis.entites.Category;
 import com.blog.blog_app_apis.exceptions.ResourceNotFoundException;
@@ -11,6 +14,7 @@ import com.blog.blog_app_apis.payloads.CategoryDto;
 import com.blog.blog_app_apis.repositories.CategoryRepo;
 import com.blog.blog_app_apis.services.CategoryService;
 
+@Service
 public class CategoryServiceimpl implements CategoryService {
 
     @Autowired
@@ -57,7 +61,9 @@ public class CategoryServiceimpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getCategories() {
-       
+       List<Category> categories = categoryRepo.findAll();
+       List<CategoryDto> catDtos = categories.stream().map((cat) -> modelMapper.map(cat, CategoryDto.class)).collect(Collectors.toList());
+       return catDtos;
     }
 
 }
